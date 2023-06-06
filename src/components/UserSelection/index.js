@@ -2,17 +2,17 @@
 // autenticar usuario
 // registrar inicio del timer
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from "react";
 import { Modal } from "react-bootstrap";
-import { api } from "../../services/api"
-import { CodeVerification } from '../CodeVerification';
+import { api } from "../../services/api";
+import { CodeVerification } from "../CodeVerification";
 
 export const UserSelection = ({
   setTime,
   handleWorkerChange,
   setReady,
   modality,
-  setEntries
+  setEntries,
 }) => {
   const [workers, setWorkers] = useState();
   const [currentWorker, setCurrentWorker] = useState();
@@ -24,44 +24,46 @@ export const UserSelection = ({
   const loadWorkers = useCallback(async () => {
     try {
       const response = await api.get(`workers/`);
-      console.log(response.data);
       setWorkers(response.data);
     } catch (err) {
       console.log(err);
     }
-  }, []
-  );
+  }, []);
 
   useEffect(() => {
     loadWorkers();
   }, [loadWorkers]);
 
-  const handleClickUser = useCallback(async (worker) => {
-    try {
-      setCurrentWorker(worker);
-      handleWorkerChange(worker);
-      handleShowModal();
-    } catch (err) {
-      console.log(err);
-    }
-  }, [handleShowModal, handleWorkerChange]);
-
+  const handleClickUser = useCallback(
+    async (worker) => {
+      try {
+        setCurrentWorker(worker);
+        handleWorkerChange(worker);
+        handleShowModal();
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    [handleShowModal, handleWorkerChange]
+  );
 
   return (
     <>
-      {workers ? workers.map((worker) => (
-        <div key={worker.id} className='mx-5 my-2 text-center'>
-          <button
-            type='button'
-            className={`btn btn-${worker.color}`}
-            onClick={() => handleClickUser(worker)}>
-            {worker.name}
-          </button>
-        </div>
-      )
-      ) :
+      {workers ? (
+        workers.map((worker) => (
+          <div key={worker.id} className="mx-5 my-2 text-center">
+            <button
+              type="button"
+              className={`btn btn-${worker.color}`}
+              onClick={() => handleClickUser(worker)}
+            >
+              {worker.name}
+            </button>
+          </div>
+        ))
+      ) : (
         <div>No hay registro de trabajadores</div>
-      }
+      )}
       <Modal show={show} onHide={handleCloseModal}>
         <CodeVerification
           worker={currentWorker}
@@ -73,5 +75,5 @@ export const UserSelection = ({
         />
       </Modal>
     </>
-  )
-}
+  );
+};
