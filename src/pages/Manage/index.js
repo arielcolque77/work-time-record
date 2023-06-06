@@ -12,7 +12,7 @@ export const Manage = () => {
   const [worker, setWorker] = useState();
   const [entries, setEntries] = useState([]);
   const [modality] = useState("admin");
-  const [currentWorker, setCurrentWorker] = useState();
+  const [, setCurrentWorker] = useState();
 
   const handleWorkerChange = (value) => setWorker(value);
   const [show, setShow] = useState(false);

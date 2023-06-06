@@ -15,7 +15,7 @@ export const CodeVerification = ({
   setEntries,
 }) => {
   const [typedCode, setTypedCode] = useState();
-  const [verified, setVerified] = useState(false);
+  const [, setVerified] = useState(false);
   const [dateTime, setDateTime] = useState(new Date());
   const [adminCode] = useState("12341234");
 
