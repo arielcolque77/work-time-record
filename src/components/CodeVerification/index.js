@@ -17,6 +17,7 @@ export const CodeVerification = ({
   const [typedCode, setTypedCode] = useState();
   const [verified, setVerified] = useState(false);
   const [dateTime, setDateTime] = useState(new Date());
+  const [adminCode] = useState("12341234");
 
   const handleTypeCode = useCallback(async (e) => {
     try {
@@ -110,13 +111,20 @@ export const CodeVerification = ({
           } else if (modality === "resumen") {
             goingToSummary();
             handleClose();
+          } else {
+            alert("Se ha producido un error");
+            handleClose();
           }
+        } else if (typedCode === adminCode) {
+          goingToSummary();
+          handleClose();
         }
       } catch (err) {
         console.log(err);
       }
     },
     [
+      adminCode,
       goingToSummary,
       handleClose,
       handleVerifyCode,
@@ -138,7 +146,11 @@ export const CodeVerification = ({
           <Modal.Body>
             <div className="mt-3">
               <label htmlFor="name">
-                <span>Código: *</span>
+                <span>
+                  {modality === "admin"
+                    ? "Código de administrador: *"
+                    : "Código: *"}
+                </span>
               </label>
               <Input
                 className=" form-control"

@@ -3,6 +3,7 @@ import { AllEntries } from "../AllEntries";
 import { MonthlyInformation } from "../MonthlyInformation";
 import { CumulativeTotal } from "../CumulativeTotal";
 import { Return } from "../../../components/Return";
+import { api } from "../../../services/api";
 
 export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
   const [totalDuration, setTotalDuration] = useState(0);
@@ -65,6 +66,11 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
 
   const calculateEveryMonthDuration = useCallback(async () => {
     try {
+      const response = await api.get(
+        `hourly-salary/months/worker/${worker.id}`
+      );
+      // const hourlyPrice = response.data.salary;
+      console.log(response);
       const months = Array.from({ length: 12 }, (_, index) => index);
       const durationByMonth = months.map((month) => {
         const thisMonthEntries = modifiedEntries.filter(
@@ -80,6 +86,11 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
         const monthName = new Date(2000, month).toLocaleString("default", {
           month: "long",
         });
+
+        const hourlyPrice = response.data.filter(
+          (item) => item.month - 1 === month
+        );
+        console.log(hourlyPrice[0].salary);
         // setLastMonthDuration({ hours, minutes })
         return {
           monthNumber: month,
@@ -87,15 +98,15 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
           duration: sum,
           hours: hours,
           minutes: minutes,
-          hourly_price: 700,
-          total_price: (sum / 60) * 700,
+          hourly_price: parseFloat(hourlyPrice[0].salary),
+          total_price: (sum / 60) * parseFloat(hourlyPrice[0].salary),
         };
       });
       setEveryMonthDuration(durationByMonth);
     } catch (err) {
       console.log(err);
     }
-  }, [modifiedEntries]);
+  }, [modifiedEntries, worker.id]);
 
   useEffect(() => {
     calculateDuration();
