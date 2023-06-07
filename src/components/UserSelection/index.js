@@ -62,7 +62,7 @@ export const UserSelection = ({
           </div>
         ))
       ) : (
-        <div>No hay registro de trabajadores</div>
+        <div className="text-center">No hay registro de trabajadores</div>
       )}
       <Modal show={show} onHide={handleCloseModal}>
         <CodeVerification

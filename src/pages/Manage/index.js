@@ -63,28 +63,36 @@ export const Manage = () => {
   return (
     <>
       <div className="container">
-        <h1>Admistrar</h1>
-        <button
-          type="button"
-          className="btn btn-outline-success me-2"
-          onClick={handleSummaryWorker}
-        >
-          Ver Resumen por Trabajador
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-primary me-2"
-          onClick={settingHourlyPrice}
-        >
-          Configurar precio por hora
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-danger"
-          onClick={handleAddWorker}
-        >
-          Añadir Trabajador
-        </button>
+        <h1 className="text-center">Admistrar</h1>
+        <div className="d-flex justify-content-center d-flex row">
+          <div className="d-flex justify-content-center">
+            <button
+              type="button"
+              className="btn btn-outline-success col-4"
+              onClick={handleSummaryWorker}
+            >
+              Ver Resumen por Trabajador
+            </button>
+          </div>
+          <div className="d-flex justify-content-center">
+            <button
+              type="button"
+              className="btn btn-outline-primary col-4"
+              onClick={settingHourlyPrice}
+            >
+              Configurar precio por hora
+            </button>
+          </div>
+          <div className="d-flex justify-content-center">
+            <button
+              type="button"
+              className="btn btn-outline-danger col-4"
+              onClick={handleAddWorker}
+            >
+              Añadir Trabajador
+            </button>
+          </div>
+        </div>
       </div>
 
       <Modal show={show} onHide={handleCloseModal}>

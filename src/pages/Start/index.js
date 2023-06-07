@@ -20,10 +20,10 @@ export const Start = () => {
     return (
         <>
             <div className='container'>
-                <h1>Registro de Entrada</h1>
+                <h1 className='text-center'>Registro de Entrada</h1>
                 {!ready ?
                     <>
-                        <div> Seleccione su usuario: </div>
+                        <div className='text-center'> Seleccione su usuario: </div>
                         <div className='mt-4'>
                             <UserSelection
                                 setTime={setTime}

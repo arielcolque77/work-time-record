@@ -14,7 +14,7 @@ const routes = () => {
       <Route path="/salida" element={<End />} />
       <Route path="/resumen" element={<Summary />} />
       <Route path="/verificacion" element={<CodeVerification />} />
-      <Route path="/" element={<h1>Inicio</h1>} />
+      <Route path="/" element={<h1 className="text-center">Inicio</h1>} />
     </Routes>
   );
 };

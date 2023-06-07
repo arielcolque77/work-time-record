@@ -18,11 +18,11 @@ export const End = () => {
 
     return (
         <>
-            <div className='container'>
-                <h1>Registro de Salida</h1>
+            <div className='container text-center'>
+                <h1 className='text-center'>Registro de Salida</h1>
                 {!ready ?
                     <>
-                        <div> Seleccione su usuario: </div>
+                        <div className='text-center'> Seleccione su usuario: </div>
                         <div className='mt-4'>
                             <UserSelection
                                 setTime={setTime}

@@ -13,10 +13,10 @@ export const Summary = () => {
   return (
     <>
       <div className="container">
-        <h1>Resumen</h1>
+        <h1 className="text-center">Resumen</h1>
         {!ready ? (
           <>
-            <div> Seleccione su usuario: </div>
+            <div className="text-center"> Seleccione su usuario: </div>
             <div className="mt-4">
               <UserSelection
                 handleWorkerChange={handleWorkerChange}
