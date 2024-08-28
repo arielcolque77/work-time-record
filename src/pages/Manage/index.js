@@ -4,11 +4,13 @@ import { SummaryScreen } from "../Summary/SummaryScreen";
 import { Modal } from "react-bootstrap";
 import { SettingPrice } from "./SettingPrice";
 import { AddWorker } from "./AddWorker";
+import { GenerateMonthlyReport } from "./GenerateMonthlyReport";
 
 export const Manage = () => {
   const [ready, setReady] = useState(false);
   const [showPriceSetting, setShowPriceSetting] = useState(false);
   const [showAddWorker, setShowAddWorker] = useState(false);
+  const [showMonthlySummary, setShowMonthlySummary] = useState(false);
   const [worker, setWorker] = useState();
   const [entries, setEntries] = useState([]);
   const [modality] = useState("admin");
@@ -60,6 +62,18 @@ export const Manage = () => {
     }
   }, [handleShowModal]);
 
+  const handleShowMonthlySummary = useCallback(async () => {
+    try {
+      setReady(true);
+      setShowPriceSetting(false);
+      setShowMonthlySummary(true);
+      handleShowModal();
+      setReady(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [handleShowModal]);
+
   return (
     <>
       <div className="container">
@@ -80,16 +94,23 @@ export const Manage = () => {
         </button>
         <button
           type="button"
-          className="btn btn-outline-danger"
+          className="btn btn-outline-danger me-2"
           onClick={handleAddWorker}
         >
           Añadir Trabajador
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline-dark"
+          onClick={handleShowMonthlySummary}
+        >
+          Generar Resumen Mensual
         </button>
       </div>
 
       <Modal show={show} onHide={handleCloseModal}>
         {/* if un ready, then select user */}
-        {!ready && !showAddWorker ? (
+        {!ready && !showAddWorker && !showMonthlySummary ? (
           <>
             <Modal.Header closeButton>
               <Modal.Title> Seleccione el usuario: </Modal.Title>
@@ -111,19 +132,17 @@ export const Manage = () => {
           <>
             {/* the option is to set the price? then set the price */}
             {showPriceSetting ? (
-              <>
-                <SettingPrice
-                  worker={worker}
-                  handleClose={handleCloseModal}
-                  modality={modality}
-                  setReady={setReady}
-                />
-              </>
+              <SettingPrice
+                worker={worker}
+                handleClose={handleCloseModal}
+                modality={modality}
+                setReady={setReady}
+              />
             ) : (
               //if setting the price is false...
               <>
                 {/* the option to add worker is false? then show summary */}
-                {!showAddWorker ? (
+                {!showAddWorker && !showMonthlySummary ? (
                   <>
                     <Modal.Header>
                       <Modal.Title> Resumen: </Modal.Title>
@@ -141,8 +160,12 @@ export const Manage = () => {
                   // if add worker is true...
                   <>
                     {/* show modal to add worker */}
-
-                    <AddWorker handleClose={handleCloseModal} />
+                    {showAddWorker ? (
+                      <AddWorker handleClose={handleCloseModal} />
+                    ) : (
+                      // else (generate report)
+                      <GenerateMonthlyReport handleClose={handleCloseModal} />
+                    )}
                   </>
                 )}
               </>

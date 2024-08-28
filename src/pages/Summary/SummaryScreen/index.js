@@ -4,11 +4,18 @@ import { MonthlyInformation } from "../MonthlyInformation";
 import { CumulativeTotal } from "../CumulativeTotal";
 import { Return } from "../../../components/Return";
 import { api } from "../../../services/api";
+import { SelectShowingDate } from "../SelectShowingDate";
+import { EntriesByMonthAndYear } from "../EntriesByMonthAndYear";
+import { MonthlyInformationByYear } from "../MonthlyInformationByYear";
 
 export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
   const [totalDuration, setTotalDuration] = useState(0);
   const [everyMonthDuration, setEveryMonthDuration] = useState([]);
   const [modifiedEntries, setModifiedEntries] = useState([]);
+  const currentYear = new Date().getFullYear();
+
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   const makeUnready = useCallback(async () => {
     try {
@@ -24,10 +31,15 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
       const data = entries.map((row) => {
         const startTime = new Date(row.start_time);
         const endTime = new Date(row.end_time);
-        const differenceInMs = endTime.getTime() - startTime.getTime();
+        const differenceInMs =
+          row.end_time !== null
+            ? endTime.getTime() - startTime.getTime()
+            : new Date().getTime() - startTime.getTime();
         const differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
         const hours = Math.floor(differenceInMinutes / 60);
         const minutes = differenceInMinutes % 60;
+
+        console.log(entries, "entries");
 
         return {
           id: row.id,
@@ -39,6 +51,8 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
           duration_minutes: minutes,
         };
       });
+
+      console.log(data, "data");
       setModifiedEntries(data);
     } catch (err) {
       console.log(err);
@@ -69,8 +83,6 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
       const response = await api.get(
         `hourly-salary/months/worker/${worker.id}`
       );
-      // const hourlyPrice = response.data.salary;
-      console.log(response);
       const months = Array.from({ length: 12 }, (_, index) => index);
       const durationByMonth = months.map((month) => {
         const thisMonthEntries = modifiedEntries.filter(
@@ -90,8 +102,6 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
         const hourlyPrice = response.data.filter(
           (item) => item.month - 1 === month
         );
-        console.log(hourlyPrice[0].salary);
-        // setLastMonthDuration({ hours, minutes })
         return {
           monthNumber: month,
           month: monthName,
@@ -108,6 +118,11 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
     }
   }, [modifiedEntries, worker.id]);
 
+  const handleDateChange = ({ month, year }) => {
+    setSelectedMonth(month);
+    setSelectedYear(year);
+  };
+
   useEffect(() => {
     calculateDuration();
     calculateEveryMonthDuration();
@@ -116,8 +131,23 @@ export const SummaryScreen = ({ worker, entries, modality, setReady }) => {
   return (
     <>
       <div className="container">
-        <AllEntries modifiedEntries={modifiedEntries} />
-        <MonthlyInformation everyMonthDuration={everyMonthDuration} />
+        <SelectShowingDate
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          onDateChange={handleDateChange}
+        />
+        <EntriesByMonthAndYear
+          modifiedEntries={modifiedEntries}
+          month={selectedMonth}
+          year={selectedYear}
+        />
+        {/* <AllEntries modifiedEntries={modifiedEntries} /> */}
+        <MonthlyInformationByYear
+          modifiedEntries={modifiedEntries}
+          worker={worker}
+          year={selectedYear}
+        />
+        {/* <MonthlyInformation everyMonthDuration={everyMonthDuration} /> */}
         <CumulativeTotal totalDuration={totalDuration} />
       </div>
       <Return makeUnready={makeUnready} />

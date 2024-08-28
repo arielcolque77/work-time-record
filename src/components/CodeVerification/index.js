@@ -51,11 +51,31 @@ export const CodeVerification = ({
 
   const registeringEntryOut = useCallback(async () => {
     try {
-      const year = dateTime.getFullYear();
-      const month = dateTime.getMonth() + 1; // Months are zero-based
-      const day = dateTime.getDate();
-      const time = dateTime.toLocaleTimeString();
-      const completeCurrentTime = year + "-" + month + "-" + day + " " + time;
+      // const year = dateTime.getFullYear();
+      // const month = dateTime.getMonth() + 1; // Months are zero-based
+      // const day = dateTime.getDate();
+      // const time = dateTime.toLocaleTimeString();
+      // const completeCurrentTime = year + "-" + month + "-" + day + " " + time;
+
+      const options = {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        second: "numeric",
+        hour12: false, // Ensure 24-hour format
+      };
+
+      const partialCompleteCurrentTime = dateTime
+        .toLocaleString("en-GB", options)
+        .replace(",", "");
+
+      const [date, time] = partialCompleteCurrentTime.split(" ");
+      const [day, month, year] = date.split("/");
+
+      const completeCurrentTime = `${year}-${month}-${day} ${time}`;
+
       setTime(completeCurrentTime);
 
       const response = await api.get(`periods-worked/worker/${worker.id}`);
